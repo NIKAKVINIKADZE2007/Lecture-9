@@ -1,40 +1,70 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 function App() {
   const [users, setUsers] = useState([]);
-  const [loading, setLoading] = useState(true);
-  useEffect(() => {
-    fetch('https://jsonplaceholder.typicode.com/users')
-      .then((responsive) => {
-        if (!responsive.ok) {
-          throw new Error('Network response was not ok');
-        }
-        return responsive.json();
-      })
-      .then((data) => {
-        setUsers(data);
-        setLoading(false);
-      })
-      .catch((error) => console.error('error data', error));
-  }, []);
-  console.log(users);
+  const [user, setUser] = useState(null);
 
-  if (loading) {
-    return <p>Loading ....</p>;
-  }
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const response = await fetch(
+          'https://jsonplaceholder.typicode.com/users'
+        );
+        const data = await response.json();
+        setUsers(data);
+        if (!response.ok) throw new Error('Network response was not ok');
+      } catch (error) {
+        console.error('This is my Error: ', error);
+      }
+    };
+    fetchUsers();
+  }, []);
+
+  const fetchUserById = async (id) => {
+    try {
+      const response = await fetch(
+        `https://jsonplaceholder.typicode.com/users/${id}`
+      );
+      const data = await response.json();
+      setUser(data);
+      if (!response.ok) throw new Error('Network response was not ok');
+    } catch (error) {
+      console.error('This is my Error: ', error);
+    }
+  };
 
   return (
     <>
       <div>
         <h1>User List</h1>
-        {users.length > 0 ? (
-          <ul>
-            {users.map((user) => {
-              return <li key={user.id}>{user.name}</li>;
-            })}
-          </ul>
-        ) : (
-          <p>Names not found</p>
+        <ul>
+          {users.map((user) => {
+            return (
+              <li
+                key={user.id}
+                onClick={() => {
+                  fetchUserById(user.id);
+                }}
+              >
+                {user.name}
+              </li>
+            );
+          })}
+        </ul>
+        {user && (
+          <div>
+            <h2>user Data</h2>
+            <p>
+              <strong>Name:</strong> {user.name}
+            </p>
+            <p>
+              <strong>Email:</strong> {user.email}
+            </p>
+            <p>
+              <strong>Address:</strong> {user.address.city}{' '}
+              {user.address.street}
+            </p>
+          </div>
         )}
       </div>
     </>
