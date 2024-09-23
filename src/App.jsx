@@ -1,35 +1,29 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-
+import { useState } from 'react';
+import FetchData from './components/FetchData';
 function App() {
-  const [count, setCount] = useState(0)
+  const [showFetchData, setShowFetchData] = useState(false);
 
+  const [counter, setCounter] = useState(0);
+
+  const toggleFetchData = () => {
+    setShowFetchData((prev) => !prev);
+  };
+
+  const IncrementNumber = () => {
+    setCounter((prev) => (prev += 1));
+  };
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <h1>Counter: </h1>
+      <p>Increment Number :</p>
+      <p>{counter}</p>
+      <button onClick={IncrementNumber}>Increment</button>
+
+      <button onClick={toggleFetchData}>click me</button>
+
+      {showFetchData && <FetchData />}
     </>
-  )
+  );
 }
 
-export default App
+export default App;
